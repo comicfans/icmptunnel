@@ -124,7 +124,7 @@ public class Connection{
 
             try
             {
-                object[] state = new object[2] { buf,cast};
+                var state = new object[2] { buf,cast};
                 UdpSocket.BeginReceiveFrom(buf,0,buf.Length,SocketFlags.None,
                     ref cast,new AsyncCallback(OnUdpReadComplete),state);
 
@@ -145,7 +145,7 @@ public class Connection{
 
             Log.T("received form udp {0} bytes",readed);
 
-            TransportLayer.Instance().WritePacket(_rawAddress,Id,buf,0,readed);
+            TransportLayer.Instance().SendToRaw(_rawAddress,Id,buf,0,readed);
         }
     }
 }

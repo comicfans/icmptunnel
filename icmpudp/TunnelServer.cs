@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net;
-using System.Net.Sockets;
 using System.Collections.Concurrent;
 
 namespace ICMPTunnel
@@ -12,17 +11,21 @@ namespace ICMPTunnel
         IPAddress _myAddress = Utils.DetectHost();
 
         IPEndPoint _targetPoint;
-        public TunnelServer(IPEndPoint targetEndPoint)
+        public TunnelServer(byte clientId,IPEndPoint targetEndPoint)
         {
+            if(clientId>127){
+                throw new ArgumentOutOfRangeException("clientId","should less than 128");
+            }
+            _id=(byte)(byte.MaxValue-clientId);
             Log.Name="Server";
             _targetPoint = targetEndPoint;
             TransportLayer.Instance().Listeners.Add(this);
         }
 
-        public const int ID = byte.MaxValue-TunnelClient.ID;
+        private byte _id;
 
         public void OnRawRead(IPAddress remoteAddr,byte id,byte [] data,int offset,int size){
-            if(id!=ID){
+            if(id!=_id){
                 //Log.T("packet id {0} not mine",id);
                 return;
             }
@@ -36,13 +39,11 @@ namespace ICMPTunnel
                 if (added)
                 {
                     conn.Log.Name = "ServerConn:" + remoteAddr;
-                    conn.Id=ID;
+                    conn.Id=_id;
                     conn.Start();
                     break;
-                }else
-                {
-                    conn.Stop();
                 }
+                conn.Stop();
             }
 
             Log.D("raw to socket {0} send {1}",_targetPoint,size);

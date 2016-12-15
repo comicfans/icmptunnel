@@ -3,7 +3,7 @@ using System.Net.Sockets;
 using System.Net.NetworkInformation;
 namespace ICMPTunnel
 {
-    class Utils
+    public class Utils
     {
 
         public static IPAddress DetectHost()

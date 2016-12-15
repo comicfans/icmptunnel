@@ -8,15 +8,16 @@ public class TunnelClient : RawEventListener
     {
         private readonly Logger Log = new Logger();
 
-        public const int ID=0;
+        private byte _id;
 
         Connection _connection;
         IPEndPoint _listenEndPoint;
-        public TunnelClient(IPAddress remoteAddress,IPEndPoint listenEndPoint)
+        public TunnelClient(byte id ,IPAddress remoteAddress,IPEndPoint listenEndPoint)
         {
             Log.Name = "Client";
+            _id=id;
             _connection= new Connection(remoteAddress, Utils.DetectHost(), null,listenEndPoint);
-            _connection.Id = ID;
+            _connection.Id = _id;
             _listenEndPoint = listenEndPoint;
             _connection.Log.Name = "ClientListen";
             _connection.Start();
@@ -32,7 +33,7 @@ public class TunnelClient : RawEventListener
 
         public void OnRawRead(IPAddress remoteAddr,byte id, byte[] data, int offset, int size)
         {
-            if(id!=ID){
+            if(id!=_id){
                 //Log.T("packet id {0} is not mine",id);
                 return;
             }

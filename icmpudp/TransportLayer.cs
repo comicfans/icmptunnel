@@ -53,7 +53,7 @@ namespace ICMPTunnel
         public static readonly int MY_HEADER_OFFSET_IP_HEADER = Ipv4Header.Ipv4HeaderLength+IcmpHeader.IcmpHeaderLength;
         public static readonly int PAYLOAD_OFFSET_IP_HEADER = Ipv4Header.Ipv4HeaderLength + ICMP_MY_HEADER_LENGTH;
 
-        public void WritePacket(IPAddress rawAddress,byte id,byte[] buf,int offset,int size){
+        public void SendToRaw(IPAddress rawAddress,byte id,byte[] buf,int offset,int size){
 
             var headerList = new ArrayList();
             

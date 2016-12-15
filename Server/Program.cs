@@ -13,7 +13,10 @@ namespace Server
     {
         static void Main(string[] args)
         {
-            TunnelServer serv = new TunnelServer(new IPEndPoint(IPAddress.Loopback, 8899));
+            byte clientId=0;
+            var serv = new TunnelServer(clientId,new IPEndPoint(IPAddress.Loopback, 8899));
+            var client = new TunnelClient(clientId,Utils.DetectHost(),new IPEndPoint(IPAddress.Loopback, 8888));
+            GlobalEventLoop.Instance().EventLoop();
         }
     }
 }
